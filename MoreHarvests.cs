@@ -18,7 +18,7 @@ namespace MoreHarvests
         private static ConfigEntry<int> _extraCropCount;
         private static ConfigEntry<int> _extraTreeCount;
         private static ConfigEntry<int> _extraHerbCount;
-
+        private static ConfigEntry<int> _extraRockCount;
 
         public Plugin()
         {
@@ -29,7 +29,7 @@ namespace MoreHarvests
             _extraCropCount = Config.Bind("General", "Extra Crop Count", 2, "Number of extra crops/tree items to generate (set to 0 to disable)");
             _extraTreeCount = Config.Bind("General", "Extra Tree Count", 2, "Number of extra tree items to generate (set to 0 to disable)");
             _extraHerbCount = Config.Bind("General", "Extra Herb Count", 2, "Number of extra herbs to generate (set to 0 to disable)");
-
+            _extraRockCount = Config.Bind("General", "Extra Rock Count", 1, "Number of extra rocks to generate on each hit (set to 0 to disable)");
         }
 
         private void Awake()
@@ -50,6 +50,22 @@ namespace MoreHarvests
             if (_debugLogging.Value)
             {
                 Log.LogInfo(String.Format("NepMoreHarvests: Debug: {0}", message));
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////
+        //  Rock (mineable rocks)
+
+        [HarmonyPatch(typeof(Rock), "Chop")]
+        [HarmonyPrefix]
+        static void RockChopPrefix(Rock __instance)
+        {
+            DebugLog("In Rock Chop Prefix");
+            //Just going to drop the first item again on each chop. Should make this a random item from the array.
+            Item firstRock = __instance.droppedItems[0].item;
+            if (firstRock != null)
+            {
+                DroppedItem.SpawnDroppedItem(__instance.gameObject.transform.position, firstRock, _extraRockCount.Value, false, false, 0);
             }
         }
 
