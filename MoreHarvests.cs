@@ -60,12 +60,15 @@ namespace MoreHarvests
         [HarmonyPrefix]
         static void RockChopPrefix(Rock __instance)
         {
-            DebugLog("In Rock Chop Prefix");
-            //Just going to drop the first item again on each chop. Should make this a random item from the array.
-            Item firstRock = __instance.droppedItems[0].item;
-            if (firstRock != null)
+            if (_extraRockCount.Value > 0)
             {
-                DroppedItem.SpawnDroppedItem(__instance.gameObject.transform.position, firstRock, _extraRockCount.Value, false, false, 0);
+                DebugLog("In Rock Chop Prefix");
+                //Just going to drop the first item again on each chop. Should make this a random item from the array.
+                Item firstRock = __instance.droppedItems[0].item;
+                if (firstRock != null)
+                {
+                    DroppedItem.SpawnDroppedItem(__instance.gameObject.transform.position, firstRock, _extraRockCount.Value, false, false, 0);
+                }
             }
         }
 
@@ -126,9 +129,8 @@ namespace MoreHarvests
         [HarmonyPrefix]
         static void HarvestableHarvestActionPrefix(Harvestable __instance)
         {
-            DebugLog("In Harvestable HarvestAction Prefix");
 
-            // The problem is this method goes into this.HEMOKEKCEFD(LCJKCBNBMHN)to do the actual dropping of the crops
+            // The challenge is this method goes into this.HEMOKEKCEFD(LCJKCBNBMHN)to do the actual dropping of the crops
             // HEMOKEKCEFD : drops the items from this.harvestedItems[]
             //               drops items with a probability from this.harvestedItemsProb[]
             //               calls this.OLMBADPCGGC to actually place the items
@@ -136,67 +138,71 @@ namespace MoreHarvests
 
             if (__instance.cropSetter != null)
             {
-                bool isTree = __instance.cropSetter.IsTreeCrop();
-                bool isGrown = __instance.cropSetter.growable.grown;
-                bool isHarvestable = __instance.isHarvestable;
-
-                int extraItems = 0;
-
-
-                if (isGrown && isHarvestable) // we're harvesting a crop or tree
+                if ((_extraCropCount.Value > 0) || (_extraTreeCount.Value > 0))
                 {
-                    if (isTree)
+                    bool isTree = __instance.cropSetter.IsTreeCrop();
+                    bool isGrown = __instance.cropSetter.growable.grown;
+                    bool isHarvestable = __instance.isHarvestable;
+
+                    int extraItems = 0;
+
+
+                    if (isGrown && isHarvestable) // we're harvesting a crop or tree
                     {
-                        DebugLog("In Harvestable HarvestAction Prefix: I think it's a tree");
-                        extraItems = _extraTreeCount.Value;
-                    } 
+                        if (isTree)
+                        {
+                            DebugLog("HarvestAction Prefix: I think it's a tree");
+                            extraItems = _extraTreeCount.Value;
+                        }
+                        else
+                        {
+                            DebugLog("HarvestAction Prefix: I think it's a crop");
+                            extraItems = _extraCropCount.Value;
+                        }
+
+                    }
                     else
                     {
-                        DebugLog("In Harvestable HarvestAction Prefix: I think it's a crop");
-                        extraItems = _extraCropCount.Value;
+                        DebugLog("HarvestAction Prefix: No idea what is being harvested!");
                     }
-                    
-                }
-                else 
-                {
-                    DebugLog("In Harvestable HarvestAction Prefix: No idea what is being harvested!");
-                }
-                DebugLog(String.Format("In Harvestable HarvestAction Prefix: Extra item count {0}", extraItems));
-
-                for (int i = 0; i < __instance.harvestedItems.Length; i++)
-                {
-                    // Need to get rid of random junk here or will break every patch
-                    // item.PNPJANDHIBH(true) ==> item.id modified by BIJCAFKFIOG()
-                    // Use Reflection to get the item id, then manually remakes the transformations from BIJCAFKFIOG
-                    // (Random function names as of 2024-07029; by the time you read this they will have changed!
-
-                    int reflectedItemID = 0;
-                    reflectedItemID = Traverse.Create(__instance.harvestedItems[i].item).Field("id").GetValue<int>();
-                    if (reflectedItemID != 0)
-                    { 
-                        
-                        //This is the transformation ormally done by function BIJCAFKFIOG
-                        if (reflectedItemID == 1224)
+                    DebugLog(String.Format("HarvestAction Prefix: Extra item count {0}", extraItems));
+                    if (extraItems > 0)
+                    {
+                        for (int i = 0; i < __instance.harvestedItems.Length; i++)
                         {
-                            reflectedItemID = 1226;
-                        }
-                        if (Utils.dictReplaceItems.ContainsKey(reflectedItemID))
-                        {
-                            reflectedItemID = Utils.dictReplaceItems[reflectedItemID];
-                        }
-                        //
+                            // Need to get rid of random junk here or will break every patch
+                            // item.PNPJANDHIBH(true) ==> item.id modified by BIJCAFKFIOG()
+                            // Use Reflection to get the item id, then manually remakes the transformations from BIJCAFKFIOG
+                            // (Random function names as of 2024-07029; by the time you read this they will have changed!
 
-                        DebugLog(String.Format("In Harvestable HarvestAction Prefix: itemID {0}", reflectedItemID));
-                        //Item item = ItemDatabaseAccessor.GetItem(Utils.BIJCAFKFIOG(this.harvestedItems[i].item.PNPJANDHIBH(true), false), false, true); <-- Original line with "fun" functions
-                        Item item = ItemDatabaseAccessor.GetItem(reflectedItemID);
-                        if (item != null)
-                        {
-                            DroppedItem.SpawnDroppedItem(__instance.gameObject.transform.position, item, extraItems, false, false, 0);
+                            int reflectedItemID = 0;
+                            reflectedItemID = Traverse.Create(__instance.harvestedItems[i].item).Field("id").GetValue<int>();
+                            if (reflectedItemID != 0)
+                            {
+
+                                //This is the transformation ormally done by function BIJCAFKFIOG
+                                if (reflectedItemID == 1224)
+                                {
+                                    reflectedItemID = 1226;
+                                }
+                                if (Utils.dictReplaceItems.ContainsKey(reflectedItemID))
+                                {
+                                    reflectedItemID = Utils.dictReplaceItems[reflectedItemID];
+                                }
+                                //
+
+                                DebugLog(String.Format("HarvestAction Prefix: itemID {0}", reflectedItemID));
+                                //Item item = ItemDatabaseAccessor.GetItem(Utils.BIJCAFKFIOG(this.harvestedItems[i].item.PNPJANDHIBH(true), false), false, true); <-- Original line with "fun" functions
+                                Item item = ItemDatabaseAccessor.GetItem(reflectedItemID);
+                                if (item != null)
+                                {
+                                    DroppedItem.SpawnDroppedItem(__instance.gameObject.transform.position, item, extraItems, false, false, 0);
+                                }
+                            }
+
                         }
                     }
-
                 }
-
 
             }
         }
