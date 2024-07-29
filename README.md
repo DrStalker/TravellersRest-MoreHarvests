@@ -1,4 +1,4 @@
-# TravellersRest-EasyFishing
+# TravellersRest-MoreHarvests
 Increase the number of items dropped from various methos of harvesting/gathering.  Each of these is seperately configurable via the config rule:
 
 
