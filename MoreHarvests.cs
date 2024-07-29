@@ -166,14 +166,16 @@ namespace MoreHarvests
                 for (int i = 0; i < __instance.harvestedItems.Length; i++)
                 {
                     // Need to get rid of random junk here or will break every patch
-                    // item.PNPJANDHIBH(true) ==> item.id (more or less...) because getting id directly is protected.
-                    // Lets try reflection!
+                    // item.PNPJANDHIBH(true) ==> item.id modified by BIJCAFKFIOG()
+                    // Use Reflection to get the item id, then manually remakes the transformations from BIJCAFKFIOG
+                    // (Random function names as of 2024-07029; by the time you read this they will have changed!
 
                     int reflectedItemID = 0;
                     reflectedItemID = Traverse.Create(__instance.harvestedItems[i].item).Field("id").GetValue<int>();
                     if (reflectedItemID != 0)
                     { 
-                        //This is the "more or less" part that is done by function BIJCAFKFIOG
+                        
+                        //This is the transformation ormally done by function BIJCAFKFIOG
                         if (reflectedItemID == 1224)
                         {
                             reflectedItemID = 1226;
@@ -182,9 +184,10 @@ namespace MoreHarvests
                         {
                             reflectedItemID = Utils.dictReplaceItems[reflectedItemID];
                         }
+                        //
 
                         DebugLog(String.Format("In Harvestable HarvestAction Prefix: itemID {0}", reflectedItemID));
-                        //Item item = ItemDatabaseAccessor.GetItem(Utils.BIJCAFKFIOG(__instance.harvestedItems[i].item.PNPJANDHIBH(true), false), false, true); <-- Original line with "fun" functions
+                        //Item item = ItemDatabaseAccessor.GetItem(Utils.BIJCAFKFIOG(this.harvestedItems[i].item.PNPJANDHIBH(true), false), false, true); <-- Original line with "fun" functions
                         Item item = ItemDatabaseAccessor.GetItem(reflectedItemID);
                         if (item != null)
                         {
