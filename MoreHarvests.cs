@@ -24,12 +24,12 @@ namespace MoreHarvests
         {
             // bind to config settings
             _debugLogging = Config.Bind("Debug", "Debug Logging", false, "Logs additional information to console");
-            _extraBerryCount = Config.Bind("General", "Extra Berry Count", 2, "Number of extra berries to generate (set to 0 to disable)");
-            _extraMiscCount = Config.Bind("General", "Extra Misc Count", 2, "Number of extra misc items (sticks, junk, mussels) to generate (set to 0 to disable)");
-            _extraCropCount = Config.Bind("General", "Extra Crop Count", 2, "Number of extra crops/tree items to generate (set to 0 to disable)");
-            _extraTreeCount = Config.Bind("General", "Extra Tree Count", 2, "Number of extra tree items to generate (set to 0 to disable)");
-            _extraHerbCount = Config.Bind("General", "Extra Herb Count", 2, "Number of extra herbs to generate (set to 0 to disable)");
-            _extraRockCount = Config.Bind("General", "Extra Rock Count", 1, "Number of extra rocks to generate on each hit (set to 0 to disable)");
+            _extraBerryCount = Config.Bind("General", "Extra Berry Count", 0, "Number of extra berries to generate (set to 0 to disable)");
+            _extraMiscCount  = Config.Bind("General", "Extra Misc Count",  0, "Number of extra misc items (sticks, junk, mussels) to generate (set to 0 to disable)");
+            _extraCropCount  = Config.Bind("General", "Extra Crop Count",  0, "Number of extra crops to generate (set to 0 to disable)");
+            _extraTreeCount  = Config.Bind("General", "Extra Tree Count",  3, "Number of extra tree items to generate (set to 0 to disable)");
+            _extraHerbCount  = Config.Bind("General", "Extra Herb Count",  3, "Number of extra herbs to generate (set to 0 to disable)");
+            _extraRockCount  = Config.Bind("General", "Extra Rock Count",  1, "Number of extra rocks to generate on each hit (set to 0 to disable)");
         }
 
         private void Awake()
