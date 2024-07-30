@@ -1,8 +1,8 @@
 # TravellersRest-MoreHarvests
-Increase the number of items dropped from various methos of harvesting/gathering.  Each of these is seperately configurable via the config settings.
-I created this mod because I wanted to increase the amount of herbs dropped; finding the place to change herbs took a long time and I found almost every other time of harvestable resource along the way.
 
+Increase the number of items dropped from various forms of harvesting/gathering.  Each of these is seperately configurable via the config settings.
 
+I created this mod because I wanted to increase the amount of herbs dropped; finding the place to change herbs took a long time and I found almost every other type of harvestable resource along the way.
 
 
 * Number of extra berries to generate (default: 0)
@@ -14,23 +14,32 @@ I created this mod because I wanted to increase the amount of herbs dropped; fin
 
 
 
-[Click here for detailed steps on creating and using mods for Traveller's Rest﻿.](https://docs.google.com/document/d/e/2PACX-1vSciLNh4KgUxE4L2h_K0KAxi2hE6Z1rhroX0DJVhZIqNEgz2RvYESqffRl8GFONKKF1MjYIIGI5OKHE/pub)
+## Downloading the mod
+
+Adding Traveller's Rest to Nexus Mods is in progress, until that is complete you can download the mod from [compiled-releases](https://github.com/DrStalker/TravellersRest-MoreHarvests/tree/main/compiled-releases)
 
 
 ## How to install mods:
 
-1. Install [Bepinex](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)﻿ (Stable version 5.4 for Windows 64)
-2. Start the game, quit the game after it finishes loading
-3. This will create a Bepinex config file and a plugins folder that you can put additional mods in
-4. (optional) Enable the Bepinex Console (see the detailed guide or the Bepinex documentation for steps)
-5. Copy the mod .dll to the plugins directory.
+    Install [Bepinex](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)﻿ (Stable version 5.4 for Windows 64)
+    Start the game, quit the game after it finishes loading
+    This will create a Bepinex config file and a plugins folder that you can put additional mods in
+    (optional) Enable the Bepinex Console (see the detailed guide or the Bepinex documentation for steps)
+    Copy the mod .dll to the plugins directory.
 
 
 ## How to change mod settings:
 
-1. Install the mod and start the game.
-2. Bepinex will create a file in the <game folder>\BepInEx\config\ with default settings for the mod.
-3. Exit the game, edit the config file, restart the game.
+    Install the mod and start the game.
+    Bepinex will create a file in the \BepInEx\config\ with default settings for the mod.
+    Exit the game, edit the config file, restart the game.
 
 
+## Is this mod save to add/remove mid play-through?
 
+Yes.
+
+
+## Traveller's Rest Modding Guide
+
+﻿[Here are my notes on modding Traveler's Rest.](https://docs.google.com/document/d/e/2PACX-1vSciLNh4KgUxE4L2h_K0KAxi2hE6Z1rhroX0DJVhZIqNEgz2RvYESqffRl8GFONKKF1MjYIIGI5OKHE/pub)  
