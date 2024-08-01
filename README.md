@@ -5,12 +5,13 @@ Increase the number of items dropped from various forms of harvesting/gathering.
 I created this mod because I wanted to increase the amount of herbs dropped; finding the place to change herbs took a long time and I found almost every other type of harvestable resource along the way.
 
 
-* Number of extra berries to generate (default: 0)
-* Number of extra misc items (sticks, junk, mussels) to generate (default: 0) 
-* Number of extra crops to generate on harvest (pickup only, not scythe) (default: 0)
-* Number of extra tree items to generate (default: 3) 
+* Number of extra berries to generate (default: disabled)
+* Number of extra misc items (sticks, junk, mussels) to generate (default: disabled) 
+* Number of extra crops to generate on harvest (pickup only, not scythe) (default: disabled)
+* Number of extra harvested tree items to generate (default: 3) 
 * Number of extra herbs to generate (default: 3) 
-* Number of extra rocks to generate when mining - note this is per hit, not in total. (default: 1)
+* Number of extra rocks to generate when mining - note this is per hit, not in total. (default: disabled)
+* Multiplier for the number of items generated when a tree is cut down (default: disabled)
 
 
 

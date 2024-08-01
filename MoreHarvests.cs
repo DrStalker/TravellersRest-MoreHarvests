@@ -31,8 +31,8 @@ namespace MoreHarvests
             _extraCropCount     = Config.Bind("General", "Extra Crop Count",  0, "Number of extra crops to generate (set to 0 to disable)");
             _extraTreeCount     = Config.Bind("General", "Extra Tree Count (Harvest)",  3, "Number of extra tree items to generate when harvesting (set to 0 to disable)");
             _extraHerbCount     = Config.Bind("General", "Extra Herb Count",  3, "Number of extra herbs to generate (set to 0 to disable)");
-            _extraRockCount     = Config.Bind("General", "Extra Rock Count",  1, "Number of extra rocks to generate on each hit (set to 0 to disable)");
-            _extraTreeChopCount = Config.Bind("General", "Extra Tree Multiplier (Chop)", 2, "Multiplier for items dropped when a tree is cut down; set to 0 to disable");
+            _extraRockCount     = Config.Bind("General", "Extra Rock Count",  0, "Number of extra rocks to generate on each hit (set to 0 to disable)");
+            _extraTreeChopCount = Config.Bind("General", "Extra Tree Multiplier (Chop)", 0, "Multiplier for items dropped when a tree is cut down; set to 0 to disable");
         }
 
         private void Awake()
