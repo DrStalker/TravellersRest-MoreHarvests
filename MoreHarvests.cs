@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using System;
+using UnityEngine;
 
 namespace MoreHarvests
 {
@@ -19,17 +20,19 @@ namespace MoreHarvests
         private static ConfigEntry<int> _extraTreeCount;
         private static ConfigEntry<int> _extraHerbCount;
         private static ConfigEntry<int> _extraRockCount;
+        private static ConfigEntry<int> _extraTreeChopCount;
 
         public Plugin()
         {
             // bind to config settings
-            _debugLogging = Config.Bind("Debug", "Debug Logging", false, "Logs additional information to console");
-            _extraBerryCount = Config.Bind("General", "Extra Berry Count", 0, "Number of extra berries to generate (set to 0 to disable)");
-            _extraMiscCount  = Config.Bind("General", "Extra Misc Count",  0, "Number of extra misc items (sticks, junk, mussels) to generate (set to 0 to disable)");
-            _extraCropCount  = Config.Bind("General", "Extra Crop Count",  0, "Number of extra crops to generate (set to 0 to disable)");
-            _extraTreeCount  = Config.Bind("General", "Extra Tree Count",  3, "Number of extra tree items to generate (set to 0 to disable)");
-            _extraHerbCount  = Config.Bind("General", "Extra Herb Count",  3, "Number of extra herbs to generate (set to 0 to disable)");
-            _extraRockCount  = Config.Bind("General", "Extra Rock Count",  1, "Number of extra rocks to generate on each hit (set to 0 to disable)");
+            _debugLogging       = Config.Bind("Debug", "Debug Logging", false, "Logs additional information to console");
+            _extraBerryCount    = Config.Bind("General", "Extra Berry Count", 0, "Number of extra berries to generate (set to 0 to disable)");
+            _extraMiscCount     = Config.Bind("General", "Extra Misc Count",  0, "Number of extra misc items (sticks, junk, mussels) to generate (set to 0 to disable)");
+            _extraCropCount     = Config.Bind("General", "Extra Crop Count",  0, "Number of extra crops to generate (set to 0 to disable)");
+            _extraTreeCount     = Config.Bind("General", "Extra Tree Count (Harvest)",  3, "Number of extra tree items to generate when harvesting (set to 0 to disable)");
+            _extraHerbCount     = Config.Bind("General", "Extra Herb Count",  3, "Number of extra herbs to generate (set to 0 to disable)");
+            _extraRockCount     = Config.Bind("General", "Extra Rock Count",  1, "Number of extra rocks to generate on each hit (set to 0 to disable)");
+            _extraTreeChopCount = Config.Bind("General", "Extra Tree Multiplier (Chop)", 2, "Multiplier for items dropped when a tree is cut down; set to 0 to disable");
         }
 
         private void Awake()
@@ -207,5 +210,24 @@ namespace MoreHarvests
             }
         }
 
+        //////////////////////////////////////////////////////////////////
+        //  Tree (chop down)
+        [HarmonyPatch(typeof(Tree), "SpawnDroppedItems")]
+        [HarmonyPostfix]
+        static void HarvestableHarvestActionPrefix(Tree __instance)
+        {
+            if (_extraTreeChopCount.Value >= 2)
+            {
+                for (int i=1;i< _extraTreeChopCount.Value; i++) //not an off-by-one error, the first round of items drops happens in the normal game code
+                {
+                    Vector3 x = __instance.gameObject.transform.position + new Vector3(UnityEngine.Random.Range(-0.25f, 0.25f), UnityEngine.Random.Range(-0.25f, 0.25f));
+                    DroppedItem.SpawnDroppedItems(__instance.droppedItems, __instance.droppedItemsProb, x, true);
+                }
+
+            }
+
+        }
+
+        
     }
 }
