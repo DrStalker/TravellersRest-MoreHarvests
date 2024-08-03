@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MoreHarvests
@@ -21,6 +22,10 @@ namespace MoreHarvests
         private static ConfigEntry<int> _extraHerbCount;
         private static ConfigEntry<int> _extraRockCount;
         private static ConfigEntry<int> _extraTreeChopCount;
+        private static ConfigEntry<bool> _holeNoJunk;
+        private static ConfigEntry<int> _holeExtraItems;
+        private static ConfigEntry<bool> _holeAlwaysWorm;
+        private static ConfigEntry<int> _holeRootPercent;
 
         public Plugin()
         {
@@ -33,6 +38,10 @@ namespace MoreHarvests
             _extraHerbCount     = Config.Bind("General", "Extra Herb Count",  3, "Number of extra herbs to generate (set to 0 to disable)");
             _extraRockCount     = Config.Bind("General", "Extra Rock Count",  0, "Number of extra rocks to generate on each hit (set to 0 to disable)");
             _extraTreeChopCount = Config.Bind("General", "Extra Tree Multiplier (Chop)", 0, "Multiplier for items dropped when a tree is cut down; set to 0 to disable");
+            _holeNoJunk         = Config.Bind("Digging Spots", "No junk from holes", false, "No digging up trashdigging spots (NOTE: roots and starfish are considered trash!)");
+            _holeAlwaysWorm     = Config.Bind("Digging Spots", "Always find worm", false, "Always find a worm when digging in dirt");
+            _holeRootPercent    = Config.Bind("Digging Spots", "Worm to Root chance", 0, "Percent change to replace a worm with a root (works even with trash disabled)");
+            _holeExtraItems     = Config.Bind("Digging Spots", "Extra Items from Holes", 0, "Extra items from digging spots; set to 0 to disable");
         }
 
         private void Awake()
@@ -55,6 +64,50 @@ namespace MoreHarvests
                 Log.LogInfo(String.Format("NepMoreHarvests: Debug: {0}", message));
             }
         }
+
+        //////////////////////////////////////////////////////////////////
+        //  HoleInGround
+        //  This seems to only generate fish/trash/algae on sand and worms/trash/treesprouts on other terrain?
+        //  Ah! "Trash" includes roots.
+        //  lets just edit that to something betterinstead of manually adding code for drops.
+        //  Logic: Sand: 60% chance of fish, else trashProbabilitySand(85%) chance of junk, else get this.alga
+        //         Dirt: wormProbability.probability(60%) chance of worm, else trashProbabilityGround(60%) chance of trash, else get a tree sprout
+        //               trashItemsGround is boot/underpants/root
+        //               sproutTrees is the three generic trees
+        //               trashItemsSand is starfish/red starfish?/boot/undepants/root
+
+        [HarmonyPatch(typeof(HoleInGround), "Dig")]
+        [HarmonyPrefix]
+        static void HoleInGroundDigPrefix(HoleInGround __instance)
+        {
+            DebugLog("HoleInGround.Dig.Prefix");
+            if (_holeAlwaysWorm.Value) __instance.wormProbability.probability = 100;
+            if (_holeNoJunk.Value)
+            {
+                __instance.trashProbabilitySand = 0;
+                __instance.trashProbabilityGround = 0;
+            }
+
+            if (_holeExtraItems.Value > 0)
+            {
+                __instance.wormProbability.minNum += _holeExtraItems.Value;
+                __instance.wormProbability.maxNum += _holeExtraItems.Value;
+            }
+
+            if (_holeRootPercent.Value > 0 && UnityEngine.Random.Range(0, 100) < _holeRootPercent.Value)
+            {
+                DebugLog("HoleInGround.Dig.Prefix: Changing Worm to Root");
+                //internal item name for root (inherited field, Item.name)  is "1526 - Raíz"
+                Item rootItem = ItemDatabaseAccessor.GetItem(1526);
+                if (rootItem != null) __instance.wormProbability.item = rootItem; 
+                else DebugLog("HoleInGround.Dig.Prefix: rootItem was null!");
+
+
+            }
+        }
+
+
+
 
         //////////////////////////////////////////////////////////////////
         //  Rock (mineable rocks)
