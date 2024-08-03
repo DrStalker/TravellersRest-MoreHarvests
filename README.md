@@ -12,6 +12,7 @@ I created this mod because I wanted to increase the amount of herbs dropped; fin
 * Number of extra herbs to generate (default: 3) 
 * Number of extra rocks to generate when mining - note this is per hit, not in total. (default: disabled)
 * Multiplier for the number of items generated when a tree is cut down (default: disabled)
+* Digging spot adjustments: always find a worm (no trash/prouts), no trash, chance to convert a worm into a root, extra items
 
 
 
