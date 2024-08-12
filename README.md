@@ -18,7 +18,7 @@ I created this mod because I wanted to increase the amount of herbs dropped; fin
 
 ## Downloading the mod
 
-Adding Traveller's Rest to Nexus Mods is in progress, until that is complete you can download the mod from [compiled-releases](https://github.com/DrStalker/TravellersRest-MoreHarvests/tree/main/compiled-releases)
+Mods are available on [Nexus Mods](https://www.nexusmods.com/travellersrest) or you can download the mod from [compiled-releases](https://github.com/DrStalker/TravellersRest-MoreHarvests/tree/main/compiled-releases)
 
 ## How to install mods:
 
